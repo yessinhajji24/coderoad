@@ -1,0 +1,62 @@
+<div class="page-head">
+  <h1>Ma roadmap</h1>
+  <p class="muted">Terminez tous les exercices d'un niveau pour débloquer le suivant.</p>
+</div>
+
+@if (loading()) {
+  <p class="state-msg">Chargement de la roadmap…</p>
+} @else if (error()) {
+  <p class="state-msg error-text" role="alert">{{ error() }}</p>
+} @else {
+  <div class="overall">
+    <div class="overall-top">
+      <strong>Progression globale</strong>
+      <span>{{ percent() }} %</span>
+    </div>
+    <div class="progress" role="progressbar" aria-label="Progression globale"
+         [attr.aria-valuenow]="percent()" aria-valuemin="0" aria-valuemax="100">
+      <span [style.width.%]="percent()"></span>
+    </div>
+  </div>
+
+  <ol class="levels">
+    @for (level of levels(); track level.id) {
+      <li [class.locked]="level.status === 'locked'">
+        <!-- Un niveau verrouillé n'est pas un lien : il n'est pas cliquable -->
+        @if (level.status === 'locked') {
+          <div class="node card" aria-disabled="true">
+            <span class="bubble locked">{{ level.position }}</span>
+            <div>
+              <h2>{{ level.title }}</h2>
+              <p class="muted">{{ level.description }}</p>
+              <span class="chip locked">{{ statusLabel(level) }}</span>
+              <p class="hint muted">Terminez le niveau précédent pour l'ouvrir.</p>
+            </div>
+          </div>
+        } @else {
+          <a class="node card link" routerLink="/exercises" [queryParams]="{ level: level.id }">
+            <span class="bubble" [class.done]="level.status === 'done'" [class.available]="level.status === 'available'">
+              {{ level.status === 'done' ? '✓' : level.position }}
+            </span>
+            <div>
+              <h2>{{ level.title }}</h2>
+              <p class="muted">{{ level.description }}</p>
+              <span class="chip" [class.done]="level.status === 'done'" [class.available]="level.status === 'available'">
+                {{ statusLabel(level) }}
+              </span>
+              <span class="count muted">{{ level.solved }} / {{ level.total }} exercices</span>
+            </div>
+          </a>
+        }
+      </li>
+    }
+  </ol>
+
+  @if (current(); as c) {
+    <div class="next">
+      <a class="btn" routerLink="/exercises" [queryParams]="{ level: c.id }">
+        Continuer : {{ c.title }}
+      </a>
+    </div>
+  }
+}

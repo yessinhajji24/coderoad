@@ -1,0 +1,8 @@
+<!-- role="status" : les lecteurs d'écran annoncent le message sans interrompre l'utilisateur -->
+<div class="toast-zone" role="status" aria-live="polite">
+  @if (notifier.message(); as m) {
+    <div class="toast" [class.success]="m.type === 'success'" [class.error]="m.type === 'error'">
+      {{ m.text }}
+    </div>
+  }
+</div>

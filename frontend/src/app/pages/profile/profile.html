@@ -1,0 +1,57 @@
+@if (error()) {
+  <p class="state-msg error-text" role="alert">{{ error() }}</p>
+} @else if (profile(); as p) {
+  <div class="head">
+    <div class="avatar" aria-hidden="true">{{ p.username.charAt(0).toUpperCase() }}</div>
+    <div>
+      <h1>{{ p.username }}</h1>
+      <p class="muted">{{ p.email }} · membre depuis le {{ p.createdAt | date: 'dd/MM/yyyy' }}</p>
+    </div>
+  </div>
+
+  <section class="stats" aria-label="Statistiques">
+    <div class="card stat"><span class="label">Points</span><span class="num">{{ p.points }}</span></div>
+    <div class="card stat"><span class="label">Exercices réussis</span><span class="num">{{ p.solved }}</span></div>
+    <div class="card stat"><span class="label">Réponses données</span><span class="num">{{ p.attempts }}</span></div>
+    <div class="card stat"><span class="label">Taux de réussite</span><span class="num">{{ p.successRate }} %</span></div>
+  </section>
+
+  <div class="columns">
+    <section class="card">
+      <h2>Progression par niveau</h2>
+      @for (level of p.levels; track level.id) {
+        <div class="level-row">
+          <div class="level-top">
+            <span>{{ level.position }}. {{ level.title }}</span>
+            <span class="muted">{{ level.solved }} / {{ level.total }}</span>
+          </div>
+          <div class="progress" role="progressbar" [attr.aria-label]="level.title"
+               [attr.aria-valuenow]="percent(level)" aria-valuemin="0" aria-valuemax="100">
+            <span [style.width.%]="percent(level)"></span>
+          </div>
+        </div>
+      }
+      <a class="btn btn-sm" routerLink="/roadmap">Aller à la roadmap</a>
+    </section>
+
+    <section class="card">
+      <h2>Badges</h2>
+      <ul class="badges">
+        @for (b of p.badges; track b.id) {
+          <li [class.earned]="b.earned">
+            <span class="medal" aria-hidden="true">{{ b.earned ? '★' : '☆' }}</span>
+            <div>
+              <strong>{{ b.label }}</strong>
+              <span class="muted">{{ b.description }}</span>
+            </div>
+            <span class="chip" [class.done]="b.earned" [class.locked]="!b.earned">
+              {{ b.earned ? 'Obtenu' : 'À obtenir' }}
+            </span>
+          </li>
+        }
+      </ul>
+    </section>
+  </div>
+} @else {
+  <p class="state-msg">Chargement du profil…</p>
+}

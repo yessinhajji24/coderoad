@@ -1,0 +1,21 @@
+.auth-box {
+  max-width: 440px;
+  margin: 1.5rem auto;
+  padding: 1.75rem;
+}
+
+.full { width: 100%; }
+.server-error { margin-bottom: 0.75rem; }
+
+.switch { margin: 1.25rem 0 0; text-align: center; }
+
+.link {
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  color: var(--accent-text);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}

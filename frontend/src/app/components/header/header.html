@@ -1,0 +1,23 @@
+<header class="topbar">
+  <a routerLink="/" class="logo" aria-label="CodeRoad, retour à l'accueil">CodeRoad</a>
+
+  <nav class="nav" aria-label="Navigation principale">
+    <a routerLink="/roadmap" routerLinkActive="active">Roadmap</a>
+    <a routerLink="/visualizer" routerLinkActive="active">Visualiseur</a>
+    <a routerLink="/profile" routerLinkActive="active">Profil</a>
+  </nav>
+
+  <div class="actions">
+    <button type="button" class="btn btn-secondary btn-sm" (click)="toggleTheme()"
+            [attr.aria-label]="theme() === 'dark' ? 'Passer au thème clair' : 'Passer au thème sombre'">
+      <span class="long">Thème </span>{{ theme() === 'dark' ? 'clair' : 'sombre' }}
+    </button>
+
+    @if (auth.isLoggedIn()) {
+      <span class="who">{{ auth.user()?.username }}</span>
+      <button type="button" class="btn btn-secondary btn-sm" (click)="logout()">Déconnexion</button>
+    } @else {
+      <a routerLink="/login" class="btn btn-sm">Connexion</a>
+    }
+  </div>
+</header>

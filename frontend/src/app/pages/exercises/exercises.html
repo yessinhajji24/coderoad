@@ -1,0 +1,65 @@
+@if (loading()) {
+  <p class="state-msg">Chargement des exercices…</p>
+} @else if (error()) {
+  <div class="state-msg">
+    <p class="error-text" role="alert">{{ error() }}</p>
+    <a class="btn btn-secondary" routerLink="/roadmap">Retour à la roadmap</a>
+  </div>
+} @else if (finished()) {
+  <section class="card summary">
+    <h1>Niveau terminé</h1>
+    <p class="score">{{ score() }} / {{ exercises().length }}</p>
+    <p class="muted">
+      {{ score() === exercises().length
+        ? 'Parfait ! Le niveau suivant est maintenant débloqué.'
+        : 'Vous pouvez recommencer : un niveau est validé quand toutes les questions ont été réussies au moins une fois.' }}
+    </p>
+    <div class="actions">
+      <a class="btn" routerLink="/roadmap">Retour à la roadmap</a>
+      <button type="button" class="btn btn-secondary" (click)="load()">Recommencer</button>
+    </div>
+  </section>
+} @else if (current(); as q) {
+  <div class="page-head">
+    <div class="top">
+      <h1>Niveau {{ levelId }}</h1>
+      <span class="muted">Question {{ index() + 1 }} / {{ exercises().length }}</span>
+    </div>
+    <div class="progress" role="progressbar" aria-label="Avancement"
+         [attr.aria-valuenow]="percent()" aria-valuemin="0" aria-valuemax="100">
+      <span [style.width.%]="percent()"></span>
+    </div>
+  </div>
+
+  <section class="card question">
+    <h2>{{ q.question }}</h2>
+
+    <ul class="options">
+      @for (option of q.options; track $index) {
+        <li>
+          <button type="button" class="option" [class]="'option ' + optionClass($index)"
+                  (click)="select($index)" [disabled]="result() !== null">
+            <span class="letter">{{ letters[$index] }}</span>
+            <span>{{ option }}</span>
+          </button>
+        </li>
+      }
+    </ul>
+
+    @if (result(); as r) {
+      <div class="feedback" [class.ok]="r.correct" role="status">
+        <strong>{{ r.correct ? 'Bonne réponse !' : 'Pas tout à fait.' }}</strong>
+        <p>{{ r.explanation }}</p>
+      </div>
+      <button type="button" class="btn" (click)="next()">
+        {{ index() + 1 >= exercises().length ? 'Voir mon résultat' : 'Question suivante' }}
+      </button>
+    } @else {
+      <button type="button" class="btn" (click)="validate()" [disabled]="selected() === null || submitting()">
+        {{ submitting() ? 'Vérification…' : 'Valider' }}
+      </button>
+    }
+  </section>
+} @else {
+  <p class="state-msg">Aucun exercice dans ce niveau.</p>
+}

@@ -1,0 +1,80 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.step-count { color: var(--muted); font-size: 0.9rem; margin-bottom: 0.25rem; }
+
+.chart { width: 100%; height: auto; max-height: 320px; display: block; }
+
+/* Couleurs des barres : le sens est le même dans toute l'application */
+.bar { fill: var(--neutral); transition: fill 0.2s; }
+.bar.sorted   { fill: var(--accent); }
+.bar.min      { fill: var(--amber); }
+.bar.compared { fill: var(--red); }
+
+.value { fill: var(--text); font-size: 15px; font-weight: 700; }
+.index { fill: var(--muted); font-size: 12px; }
+
+.message {
+  min-height: 3.2rem;
+  margin: 0.5rem 0 1rem;
+  padding: 0.6rem 0.8rem;
+  background: var(--bg);
+  border-left: 4px solid var(--amber);
+  border-radius: 6px;
+}
+
+.controls { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.controls .btn { min-width: 52px; }
+.controls .play { min-width: 110px; }
+
+.speed { display: flex; align-items: center; gap: 0.75rem; margin: 1rem 0; }
+.speed label { margin: 0; }
+.speed input { flex: 1; max-width: 260px; accent-color: var(--accent); }
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 0.35rem;
+  border-radius: 3px;
+  vertical-align: middle;
+  background: var(--neutral);
+}
+.dot.sorted   { background: var(--accent); }
+.dot.min      { background: var(--amber); }
+.dot.compared { background: var(--red); }
+
+.side { display: grid; gap: 1rem; }
+.side h2 { font-size: 1.1rem; }
+
+.code { list-style: none; margin: 0 0 0.75rem; padding: 0; }
+.code li { padding-top: 0.2rem; padding-bottom: 0.2rem; border-left: 3px solid transparent; }
+.code li.active { background: var(--ok-bg); border-left-color: var(--accent); }
+.code code { font-size: 0.9rem; }
+.complexity { font-size: 0.9rem; margin: 0; }
+
+.side-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .controls { flex-wrap: nowrap; gap: 0.35rem; }
+  .controls .btn { min-width: 0; flex: 1; padding: 0 0.4rem; }
+  .controls .play { flex: 2; }
+}

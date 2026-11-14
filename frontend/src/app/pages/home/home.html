@@ -1,0 +1,28 @@
+<section class="hero">
+  <p class="eyebrow">Apprendre l'algorithmique</p>
+  <h1>Comprenez les algorithmes en les <span class="accent">voyant</span> s'exécuter</h1>
+  <p class="lead">
+    CodeRoad vous guide niveau par niveau : des animations pas à pas, des exercices
+    corrigés automatiquement et une progression qui se mémorise.
+  </p>
+
+  <div class="hero-actions">
+    @if (auth.isLoggedIn()) {
+      <a class="btn" routerLink="/roadmap">Continuer ma roadmap</a>
+      <a class="btn btn-secondary" routerLink="/visualizer">Ouvrir le visualiseur</a>
+    } @else {
+      <a class="btn" routerLink="/login" [queryParams]="{ mode: 'register' }">Commencer gratuitement</a>
+      <a class="btn btn-secondary" routerLink="/visualizer">Essayer le visualiseur</a>
+    }
+  </div>
+</section>
+
+<section class="features" aria-label="Fonctionnalités">
+  <!-- @for répète le bloc pour chaque élément du tableau ; "track" aide Angular à suivre chaque élément -->
+  @for (f of features; track f.title) {
+    <article class="card">
+      <h3>{{ f.title }}</h3>
+      <p class="muted">{{ f.text }}</p>
+    </article>
+  }
+</section>

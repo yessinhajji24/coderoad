@@ -1,0 +1,78 @@
+<div class="page-head">
+  <h1>Visualiseur : tri par sélection</h1>
+  <p class="muted">
+    À chaque tour, on cherche le plus petit élément restant et on le place au début de la partie non triée.
+  </p>
+</div>
+
+<div class="layout">
+  <!-- ===== Colonne de gauche : animation + commandes ===== -->
+  <section class="card stage" aria-label="Animation">
+    <p class="step-count">Étape {{ index() + 1 }} / {{ last() + 1 }}</p>
+
+    <!-- Le dessin est en SVG : chaque barre est un élément <rect> que Angular met à jour -->
+    <svg class="chart" [attr.viewBox]="'0 0 ' + chartWidth() + ' 236'" role="img"
+         aria-label="Barres représentant les valeurs du tableau">
+      @for (b of bars(); track b.k) {
+        <rect [attr.class]="'bar ' + b.state" [attr.x]="b.x" [attr.y]="b.y"
+              [attr.width]="barWidth" [attr.height]="b.height" rx="4" />
+        <text class="value" [attr.x]="b.x + barWidth / 2" [attr.y]="b.y - 6" text-anchor="middle">{{ b.value }}</text>
+        <text class="index" [attr.x]="b.x + barWidth / 2" [attr.y]="229" text-anchor="middle">{{ b.k }}</text>
+      }
+    </svg>
+
+    <p class="message" aria-live="polite">{{ step().message }}</p>
+
+    <div class="controls" role="group" aria-label="Commandes de lecture">
+      <button type="button" class="btn btn-secondary" (click)="first()" aria-label="Retour au début">|&lt;</button>
+      <button type="button" class="btn btn-secondary" (click)="prev()" [disabled]="index() === 0"
+              aria-label="Étape précédente">&lt;</button>
+      <button type="button" class="btn play" (click)="toggle()">{{ playing() ? 'Pause' : 'Lecture' }}</button>
+      <button type="button" class="btn btn-secondary" (click)="next()" [disabled]="index() === last()"
+              aria-label="Étape suivante">&gt;</button>
+      <button type="button" class="btn btn-secondary" (click)="end()" aria-label="Aller à la fin">&gt;|</button>
+    </div>
+
+    <div class="speed">
+      <label for="speed">Vitesse</label>
+      <input id="speed" type="range" min="200" max="1500" step="100"
+             [value]="1700 - speed()" (input)="onSpeed($event)" />
+    </div>
+
+    <ul class="legend" aria-label="Légende des couleurs">
+      <li><span class="dot sorted"></span> trié</li>
+      <li><span class="dot min"></span> minimum courant</li>
+      <li><span class="dot compared"></span> comparé</li>
+      <li><span class="dot idle"></span> pas encore traité</li>
+    </ul>
+  </section>
+
+  <!-- ===== Colonne de droite : pseudo-code + choix du tableau ===== -->
+  <aside class="side">
+    <section class="card" aria-label="Pseudo-code">
+      <h2>Pseudo-code</h2>
+      <ol class="code">
+        @for (line of pseudoCode; track $index) {
+          <li [class.active]="step().line === $index" [style.padding-left.rem]="0.5 + line.indent * 1.2">
+            <code>{{ line.text }}</code>
+          </li>
+        }
+      </ol>
+      <p class="muted complexity">Complexité : O(n²) comparaisons, au plus n − 1 échanges.</p>
+    </section>
+
+    <section class="card" aria-label="Choisir un tableau">
+      <h2>Votre tableau</h2>
+      <!-- #box est une "référence" vers le champ : on lit sa valeur au clic, sans formulaire -->
+      <label for="custom">Nombres séparés par des virgules</label>
+      <input id="custom" type="text" #box placeholder="ex. 8, 3, 5, 1" (keyup.enter)="apply(box.value)" />
+      @if (inputError()) {
+        <p class="error-text" role="alert">{{ inputError() }}</p>
+      }
+      <div class="side-actions">
+        <button type="button" class="btn btn-sm" (click)="apply(box.value)">Appliquer</button>
+        <button type="button" class="btn btn-secondary btn-sm" (click)="random()">Tableau aléatoire</button>
+      </div>
+    </section>
+  </aside>
+</div>
